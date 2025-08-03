@@ -14,25 +14,36 @@ return [
     |
     */
 
-    'postmark' => [
-        'token' => env('POSTMARK_TOKEN'),
+    // 'postmark' => [
+    //     'token' => env('POSTMARK_TOKEN'),
+    // ],
+
+    // 'resend' => [
+    //     'key' => env('RESEND_KEY'),
+    // ],
+
+    // 'ses' => [
+    //     'key' => env('AWS_ACCESS_KEY_ID'),
+    //     'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    //     'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    // ],
+
+    // 'slack' => [
+    //     'notifications' => [
+    //         'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
+    //         'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+    //     ],
+    // ],
+
+    'vonage' => [
+        'key' => env('VONAGE_KEY'),
+        'secret' => env('VONAGE_SECRET'),
+        'sms_from' => env('VONAGE_SMS_FROM', 'Your App'),
     ],
 
-    'resend' => [
-        'key' => env('RESEND_KEY'),
-    ],
-
-    'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-    ],
-
-    'slack' => [
-        'notifications' => [
-            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
-        ],
+    'airtable' => [
+        'api_key' => env('AIRTABLE_API_KEY'),
+        'base_id' => env('AIRTABLE_BASE_ID'),
     ],
 
 ];
