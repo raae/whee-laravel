@@ -11,7 +11,7 @@ class CustomOneTimePasswordNotification extends OneTimePasswordNotification
 {
     public function via($notifiable): string|array
     {
-        return ['mail', 'vonage'];
+        return config('one-time-passwords.notification_channels', []);
     }
 
     // Email notification
