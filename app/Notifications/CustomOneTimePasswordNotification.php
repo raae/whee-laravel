@@ -6,12 +6,48 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Support\Facades\Log;
 use Spatie\OneTimePasswords\Notifications\OneTimePasswordNotification;
+use InvalidArgumentException;
 
 class CustomOneTimePasswordNotification extends OneTimePasswordNotification
 {
     public function via($notifiable): string|array
     {
-        return config('one-time-passwords.notification_channels', []);
+        $channels = config('one-time-passwords.notification_channels', []);
+
+        // Validate that channels are configured
+        if (empty($channels)) {
+            $error = 'No notification channels configured for OTP. Please set OTP_NOTIFICATION_CHANNELS in your .env file (e.g., OTP_NOTIFICATION_CHANNELS=mail,vonage)';
+
+            Log::error($error, [
+                'notifiable_id' => $notifiable->id ?? null,
+                'notifiable_type' => get_class($notifiable),
+                'env_value' => env('OTP_NOTIFICATION_CHANNELS'),
+            ]);
+
+            // Throw exception to prevent silent failures
+            throw new InvalidArgumentException($error);
+        }
+
+        // Validate that configured channels are supported
+        $supportedChannels = ['mail', 'vonage'];
+        $invalidChannels = array_diff($channels, $supportedChannels);
+
+        if (!empty($invalidChannels)) {
+            $error = 'Invalid notification channels configured: ' . implode(', ', $invalidChannels) .
+                    '. Supported channels: ' . implode(', ', $supportedChannels);
+
+            Log::error($error, [
+                'configured_channels' => $channels,
+                'invalid_channels' => $invalidChannels,
+                'supported_channels' => $supportedChannels,
+            ]);
+
+            throw new InvalidArgumentException($error);
+        }
+
+        Log::info('Using OTP notification channels: ' . implode(', ', $channels));
+
+        return $channels;
     }
 
     // Email notification
