@@ -5,13 +5,13 @@
                 href="{{ url('/') }}"
                 class="inline-block px-4 py-2 text-gray-700 hover:text-orange-600 text-sm font-medium transition-colors"
             >
-                Home
+                whee.no
             </a>
             <a
                 href="{{ route('login') }}"
                 class="inline-block px-4 py-2 text-gray-700 hover:text-orange-600 text-sm font-medium transition-colors"
             >
-                ← Back to Login
+                ← Tilbake til logg inn
             </a>
         </nav>
     </x-slot:header>

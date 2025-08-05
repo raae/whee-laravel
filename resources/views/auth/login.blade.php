@@ -2,10 +2,9 @@
     <x-slot:header>
         <nav class="flex items-center justify-end gap-4">
             <a
-                href="{{ url('/') }}"
+                href="{{ route('home') }}"
                 class="inline-block px-4 py-2 text-gray-700 hover:text-orange-600 text-sm font-medium transition-colors"
             >
-                Home
             </a>
         </nav>
     </x-slot:header>
@@ -51,7 +50,7 @@
                 type="submit"
                 class="w-full px-6 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-lg font-bold transition-colors"
             >
-                Send Verification Code
+                Send engangskode
             </button>
         </form>
     </div>

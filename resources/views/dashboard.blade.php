@@ -14,7 +14,7 @@
                         type="submit"
                         class="inline-block px-4 py-2 text-gray-700 hover:text-orange-600 text-sm font-medium transition-colors"
                     >
-                        Logout
+                        Logg ut
                     </button>
                 </form>
             </div>
@@ -23,9 +23,11 @@
 
     <div class="p-8 bg-white border-2 border-gray-200 rounded-lg">
         <div class="mb-6">
-            <h1 class="mb-3 text-3xl font-bold text-gray-900">Welcome back!</h1>
+            <h1 class="mb-3 text-3xl font-bold text-gray-900">
+                Velkommen tilbake!
+            </h1>
             <p class="text-gray-600 text-lg">
-                You have successfully authenticated via phone verification.
+                Du har logget inn med telefonnummer.
             </p>
         </div>
 
@@ -34,11 +36,11 @@
             <h3
                 class="text-sm font-bold mb-4 text-gray-900 uppercase tracking-wide"
             >
-                Account Information
+                Kontoinformasjon
             </h3>
             <div class="space-y-2">
                 <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-900">Name:</span>
+                    <span class="text-sm font-medium text-gray-900">Navn:</span>
                     <span
                         class="text-sm font-bold text-gray-900"
                         >{{ auth()->user()->name ?? 'N/A' }}</span
@@ -46,7 +48,7 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-900"
-                        >Phone:</span
+                        >Telefonnummer:</span
                     >
                     <span
                         class="text-sm font-bold text-gray-900"
@@ -64,19 +66,21 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-900"
-                        >Phone Verified:</span
+                        >Telefonnummer bekreftet:</span
                     >
                     <span class="text-sm font-medium">
                         @if(auth()->user()->phone_verified_at)
-                        <span class="text-green-600 font-bold">✓ Verified</span>
+                        <span class="text-green-600 font-bold"
+                            >✓ Bekreftet</span
+                        >
                         @else
-                        <span class="text-orange-600 font-bold">Pending</span>
+                        <span class="text-orange-600 font-bold">Venter</span>
                         @endif
                     </span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-900"
-                        >Member Since:</span
+                        >Medlem siden:</span
                     >
                     <span
                         class="text-sm font-bold text-gray-900"
@@ -91,17 +95,17 @@
             <h3
                 class="text-sm font-bold mb-4 text-gray-900 uppercase tracking-wide"
             >
-                Quick Actions
+                Hurtighandlinger
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                     class="p-4 text-left border-2 border-gray-200 rounded-lg hover:border-orange-400 transition-colors"
                 >
                     <div class="text-sm font-bold mb-1 text-gray-900">
-                        Update Profile
+                        Oppdater profil
                     </div>
                     <div class="text-sm text-gray-600">
-                        Modify your account information
+                        Endre informasjon om deg
                     </div>
                 </button>
 
@@ -109,10 +113,10 @@
                     class="p-4 text-left border-2 border-gray-200 rounded-lg hover:border-orange-400 transition-colors"
                 >
                     <div class="text-sm font-bold mb-1 text-gray-900">
-                        Security Settings
+                        Sikkerhet
                     </div>
                     <div class="text-sm text-gray-600">
-                        Manage authentication preferences
+                        Endre autentiseringsinnstillinger
                     </div>
                 </button>
             </div>
@@ -123,7 +127,7 @@
             <h3
                 class="text-sm font-bold mb-4 text-gray-900 uppercase tracking-wide"
             >
-                Recent Activity
+                Nylige aktiviteter
             </h3>
             <div class="space-y-2">
                 <div
@@ -132,7 +136,7 @@
                     <div class="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div class="flex-1">
                         <div class="text-sm font-medium text-gray-900">
-                            Phone verification completed
+                            Telefonnummer bekreftet
                         </div>
                         <div class="text-sm text-gray-600">
                             {{ auth()->user()->phone_verified_at ? auth()->user()->phone_verified_at->diffForHumans() : 'Just now' }}
@@ -146,7 +150,7 @@
                     <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div class="flex-1">
                         <div class="text-sm font-medium text-gray-900">
-                            Account created
+                            Konto opprettet
                         </div>
                         <div class="text-sm text-gray-600">
                             {{ auth()->user()->created_at->diffForHumans() }}

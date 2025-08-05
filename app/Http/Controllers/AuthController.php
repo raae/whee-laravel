@@ -90,7 +90,7 @@ class AuthController extends Controller
             // It is best practice to regenerate the session id after a login
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
