@@ -64,6 +64,16 @@ return [
     'notification' => App\Notifications\CustomOneTimePasswordNotification::class,
 
     /*
+     * The notification channels to use for sending one-time passwords.
+     * Available channels: 'mail', 'vonage' (SMS)
+     * You can specify multiple channels separated by commas in your .env file
+     * Example: OTP_NOTIFICATION_CHANNELS=mail,vonage
+     */
+    'notification_channels' => array_filter(
+        array_map('trim', explode(',', env('OTP_NOTIFICATION_CHANNELS', 'mail,vonage')))
+    ),
+
+    /*
      * These class are responsible for performing core tasks regarding one-time passwords.
      * You can customize them by creating a class that extends the default, and
      * by specifying your custom class name here.
