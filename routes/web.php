@@ -7,6 +7,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Booking views
+Route::get('/booking', function () {
+    return view('booking');
+});
+
 // Authentication views
 Route::get('/auth/logg-inn', function () {
     return view('auth.login');
