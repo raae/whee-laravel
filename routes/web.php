@@ -7,16 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Booking views
-Route::get('/booking', function () {
-    return view('booking', [
-        'bookings' => [
-            ['id' => 1, 'time' => '26. august 2025', 'location' => 'Sandaker'],
-            ['id' => 2, 'time' => '27. august 2025', 'location' => 'Sandaker'],
-            ['id' => 3, 'time' => '28. august 2025', 'location' => 'Sandaker'],
-        ],
-    ]);
-});
+
 
 // Authentication views
 Route::get('/auth/logg-inn', function () {
@@ -37,4 +28,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/min-side', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+// Booking views
+Route::get('/booking/{id}', function ($id) {
+    
+    $bookings = [
+        ['id' => 1, 'time' => '26. august 2025', 'location' => 'Sandaker'],
+        ['id' => 2, 'time' => '27. august 2025', 'location' => 'Sandaker'],
+        ['id' => 3, 'time' => '28. august 2025', 'location' => 'Sandaker'],
+    ];
+
+    $booking = collect($bookings)->first(fn ($booking) => $booking['id'] = $id);
+    
+    return view('booking', ['booking' => $booking]);
 });
