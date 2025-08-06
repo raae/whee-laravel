@@ -76,7 +76,7 @@
     @if(!session('phone_for_verification'))
     <script>
         // If no phone number in session, redirect to login
-        window.location.href = "/auth/login";
+        window.location.href = "{{ route('login') }}";
     </script>
     @endif
 </x-layout>

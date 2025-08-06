@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('airtable_id')->nullable();
+            $table->timestamp('airtable_created_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

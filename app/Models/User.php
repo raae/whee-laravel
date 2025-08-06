@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\AirtableService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +27,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'airtable_id',
+        'airtable_created_at',
     ];
 
     /**
@@ -45,6 +47,7 @@ class User extends Authenticatable
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'airtable_created_at' => 'datetime',
             'phone_verified_at' => 'datetime',
         ];
     }
@@ -70,6 +73,31 @@ class User extends Authenticatable
     }
 
     /**
+     * Find user locally or fetch from Airtable and create locally
+     * This method prioritizes local database but falls back to Airtable if needed
+     */
+    public static function findOrCreateFromAirtable(string $phone): ?self
+    {
+        // First, try to find user in local database
+        $user = static::where('phone', $phone)->first();
+
+        if ($user) {
+            return $user;
+        }
+
+        // If not found locally, try Airtable
+        $airtableService = app(AirtableService::class);
+        $airtableUser = $airtableService->getUserByPhone($phone);
+
+        if (!$airtableUser) {
+            return null;
+        }
+
+        // Create local user from Airtable data
+        return static::createFromAirtable($airtableUser);
+    }
+
+    /**
      * Create or update user from Airtable data
      */
     public static function createFromAirtable(array $airtableData): self
@@ -80,15 +108,15 @@ class User extends Authenticatable
             throw new \Exception('Phone number is required');
         }
 
-        // Find existing user or create new one
         $user = static::firstOrNew(['phone' => $phone]);
 
         $user->fill([
             'airtable_id' => $airtableData['id'],
+            'airtable_created_at' => $airtableData['createdTime'],
             'first_name' => $airtableData['fields']['firstName'] ?? null,
             'last_name' => $airtableData['fields']['lastName'] ?? null,
+            'phone' => $airtableData['fields']['phoneNumber'] ?? null,
             'email' => $airtableData['fields']['email'] ?? null,
-            'phone' => $phone,
         ]);
 
         $user->save();

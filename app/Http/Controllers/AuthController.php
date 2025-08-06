@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\AirtableService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,15 +10,16 @@ use Spatie\OneTimePasswords\Enums\ConsumeOneTimePasswordResult;
 
 class AuthController extends Controller
 {
-    protected $airtableService;
 
-    public function __construct(AirtableService $airtableService)
-    {
-        $this->airtableService = $airtableService;
-    }
-
+    /**
+     * Send OTP to the user
+     */
     public function sendOtp(Request $request)
     {
+
+        // Invalidate the session to start fresh
+        $request->session()->invalidate();
+
         $request->validate([
             'phone' => 'required|phone:NO',
         ], [
@@ -28,34 +28,18 @@ class AuthController extends Controller
         ]);
 
         try {
-            // Fetch user data from Airtable by phone
-            $airtableUser = $this->airtableService->getUserByPhone($request->phone);
+            $user = User::findOrCreateFromAirtable($request->phone);
 
-            if (! $airtableUser) {
+            if (! $user) {
                 return back()->withErrors(['phone' => __('auth.phone.not_registered')])->withInput();
             }
 
-            // Create or update local user record
-            $user = User::createFromAirtable($airtableUser);
+            $user->sendOneTimePassword();
 
-            // Generate and send OTP via Email (but lookup was by phone)
-            $otp = $user->sendOneTimePassword();
+            Log::info('OTP sent to ' . $user->phone);
 
-            Log::info('OTP sent to ' . $request->phone);
-            Log::info('OTP: ' . $otp->expires_at);
-
-            // Store phone number in session for verification step
             $request->session()->put('phone_for_verification', $request->phone);
 
-            // Handle JSON response for API calls
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'OTP sent successfully',
-                    'expires_at' => $otp->expires_at,
-                ]);
-            }
-
-            // Handle form submission - redirect to verification page
             return redirect()->route('verify-otp');
 
         } catch (\Exception $e) {
@@ -63,33 +47,31 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Log in using the OTP
+     */
     public function verifyOtp(Request $request)
     {
         $request->validate([
             'otp' => 'required|string',
         ]);
 
-        // Get phone from session or request
-        $phone = $request->phone ?? $request->session()->get('phone_for_verification');
-
-        if (! $phone) {
-            return redirect()->route('login')->withErrors(['phone' => __('auth.otp_errors.default')]);
-        }
-
-        // Find user by phone
-        $user = User::where('phone', $phone)->first();
-
-        if (! $user) {
+                try {
+            // Find the user by the phone number that was used to send the OTP
+            $phone = $request->session()->get('phone_for_verification');
+            $user = User::where('phone', $phone)->firstOrFail();
+        } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['phone' => __('auth.phone.not_registered')]);
         }
 
-        // Attempt login using one-time password
-        $result = $user->attemptLoginUsingOneTimePassword($request->otp, remember: false);
+        $result = $user->attemptLoginUsingOneTimePassword($request->otp, remember: true);
 
         if ($result->isOk()) {
+            Log::info('OTP verified for ' . $user->phone);
+            $user->phone_verified_at = now();
+            $user->save();
             // It is best practice to regenerate the session id after a login
             $request->session()->regenerate();
-
             return redirect()->intended(route('dashboard'));
         }
 
@@ -98,6 +80,9 @@ class AuthController extends Controller
         ])->onlyInput('otp');
     }
 
+    /**
+     * Logout the user
+     */
     public function logout(Request $request)
     {
         Auth::logout();

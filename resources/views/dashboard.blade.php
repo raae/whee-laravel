@@ -84,7 +84,7 @@
                     >
                     <span
                         class="text-sm font-bold text-gray-900"
-                        >{{ auth()->user()->created_at->format('M j, Y') }}</span
+                        >{{ auth()->user()->airtable_created_at->format('M j, Y') }}</span
                     >
                 </div>
             </div>
