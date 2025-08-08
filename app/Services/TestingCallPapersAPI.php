@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Http;
 
 class CallingAllPapers
 {
-    protected string $baseUrl = 'https://api.callingallpapers.com/v1/cfp';
+    protected string $baseUrl = 'https://api.callingallpapers.com/v1/';
 
     public function getCFPs(): array
     {
-        return Http::get($this->baseUrl)->json();
+        return Http::get($this->baseUrl . 'cfp')->json();
     }
 
     
