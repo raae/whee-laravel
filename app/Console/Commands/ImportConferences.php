@@ -11,7 +11,7 @@ class ImportConferences extends Command
      *
      * @var string
      */
-    protected $signature = 'app:import-conferences';
+    protected $signature = 'cfps:import';
 
     /**
      * The console command description.
