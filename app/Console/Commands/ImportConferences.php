@@ -22,9 +22,11 @@ class ImportConferences extends Command
 
     /**
      * Execute the console command.
+     * injecting callingAllPapersAPI
+     * injecting TestingCallPapersAPI
      */
-    public function handle()
+    public function handle(CallingAllPapers $cfps)
     {
-        //
+        dd($cfps->conferences());
     }
 }
