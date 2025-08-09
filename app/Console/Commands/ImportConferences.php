@@ -24,10 +24,15 @@ class ImportConferences extends Command
     /**
      * Execute the console command.
      * injecting callingAllPapersAPI
-     * injecting TestingCallPapersAPI
      */
     public function handle(CallingAllPapers $cfps)
     {
-        dd($cfps->conferences());
+        foreach ($cfps->conferences()['cfps'] as $conference) {
+            $this->importOrUpdateConference($conference);
+        }
+    }
+    public function importOrUpdateConference(array $conference)
+    {
+        dd($conference['_rel']['cfp_uri']);
     }
 }
