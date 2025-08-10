@@ -35,6 +35,7 @@ class ImportConferences extends Command
     {
         $uniqueId = $conference['_rel']['cfp_uri'];
         $dateEventStart = $conference['dateEventStart'];
-        dd($conference['locatio']);
+        $location = $conference['location'];
+        dd($conference['location']);
     }
 }
