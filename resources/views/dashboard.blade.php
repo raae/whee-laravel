@@ -22,14 +22,75 @@
     </x-slot:header>
 
     <div class="p-8 bg-white border-2 border-gray-200 rounded-lg">
-        <div class="mb-6">
+        <div class="mb-8">
             <h1 class="mb-3 text-3xl font-bold text-gray-900">
-                Velkommen tilbake!
+                Sykkel og abonnement
             </h1>
-            <p class="text-gray-600 text-lg">
-                Du har logget inn med telefonnummer.
-            </p>
         </div>
+
+        @if(count($userBikes) > 0) @foreach($userBikes as $bike)
+        <!-- Bike Subscription Card -->
+        <div class="bg-gray-50 border-2 border-gray-200 rounded-lg p-6 mb-8">
+            <div class="space-y-4">
+                <!-- Bike Name -->
+                <h2 class="text-2xl font-bold text-gray-900">
+                    {{ $bike["fields"]["name"] ?? "Ukjent sykkel" }}
+                </h2>
+
+                <!-- Total Price -->
+                <div class="text-lg text-gray-700">
+                    <span class="font-semibold">Totalpris:</span>
+                    {{
+                        number_format(
+                            $bike["fields"]["price"] ?? 0,
+                            0,
+                            ",",
+                            " "
+                        )
+                    }}
+                    kr per mnd
+                </div>
+
+                <!-- Start Date -->
+                <div class="text-gray-700">
+                    Du har hatt Wheel-sykkel siden
+                    @if(isset($bike['fields']['startDate']))
+                    {{ \Carbon\Carbon::parse($bike['fields']['startDate'])->locale('no')->isoFormat('DD. MMMM YYYY') }}
+                    @else
+                    {{ auth()->user()->airtable_created_at->locale('no')->isoFormat('DD. MMMM YYYY') }}
+                    @endif
+                </div>
+
+                <!-- Notice Period -->
+                <div class="text-gray-700">
+                    {{ $bike["fields"]["noticePeriod"] ?? "3" }} mnd
+                    oppsigelsestid
+                </div>
+
+                <!-- Change Link -->
+                <div class="pt-2">
+                    <a
+                        href="#"
+                        class="text-orange-600 hover:text-orange-700 font-medium underline"
+                    >
+                        Endre
+                    </a>
+                </div>
+            </div>
+        </div>
+        @endforeach @else
+        <!-- No Bikes Message -->
+        <div class="bg-gray-50 border-2 border-gray-200 rounded-lg p-6 mb-8">
+            <div class="text-center">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">
+                    Ingen aktive sykler
+                </h2>
+                <p class="text-gray-600">
+                    Du har for øyeblikket ingen aktive sykkelabonnementer.
+                </p>
+            </div>
+        </div>
+        @endif
 
         <!-- User Information Card -->
         <div class="bg-orange-50 border-2 border-gray-200 rounded-lg p-6 mb-8">
@@ -119,44 +180,6 @@
                         Endre autentiseringsinnstillinger
                     </div>
                 </button>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div>
-            <h3
-                class="text-sm font-bold mb-4 text-gray-900 uppercase tracking-wide"
-            >
-                Nylige aktiviteter
-            </h3>
-            <div class="space-y-2">
-                <div
-                    class="flex items-center gap-3 p-4 rounded-lg bg-orange-50 border-2 border-gray-200"
-                >
-                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div class="flex-1">
-                        <div class="text-sm font-medium text-gray-900">
-                            Telefonnummer bekreftet
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            {{ auth()->user()->phone_verified_at ? auth()->user()->phone_verified_at->diffForHumans() : 'Just now' }}
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="flex items-center gap-3 p-4 rounded-lg bg-orange-50 border-2 border-gray-200"
-                >
-                    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <div class="flex-1">
-                        <div class="text-sm font-medium text-gray-900">
-                            Konto opprettet
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            {{ auth()->user()->created_at->diffForHumans() }}
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
