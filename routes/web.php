@@ -9,6 +9,19 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+class GetNextBooking
+{
+    public static function all(): array
+    {
+        return ['time' => '26. august 2025', 'location' => 'Sandaker'];
+    }
+}
+
+Route::get('/bokn', function () {
+    return view('bokn', ['booking' => GetNextBooking::all()]);
+});
+
+
 // Authentication views
 Route::get('/auth/logg-inn', function () {
     return view('auth.login');
