@@ -4,6 +4,7 @@
 use App\Services\CallingAllPapers;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Services\AirtableService;
 
 Route::get('/', function () {
     return view('welcome');
