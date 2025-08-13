@@ -6,22 +6,17 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Services\AirtableService;
 
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-class GetNextBooking
-{
-    public static function all(): array
-    {
-        return ['time' => '26. august 2025', 'location' => 'Sandaker'];
-    }
-}
+Route::get('/book', function () {
+    
+    $bookings = AirtableService::class->getNextBooking();
 
-Route::get('/bokn', function () {
-    return view('bokn', ['booking' => GetNextBooking::all()]);
+    return view('bokn', ['booking' => $bookings]);
 });
-
 
 // Authentication views
 Route::get('/auth/logg-inn', function () {
@@ -43,6 +38,20 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 });
+
+ Route::get('/bokn/{time}', function ($time) {
+    
+    $bookings = [
+        ['time' => '26-august-2025', 'location' => 'Sandaker'],
+        ['time' => '27-august-2025', 'location' => 'Sandaker'],
+        ['time' => '28-august-2025', 'location' => 'Sandaker'],
+    ];
+
+    $booking = collect($bookings)->first(fn ($booking) => $booking['time'] = $time);
+    
+    return view('booking', ['booking' => $booking]);
+ });
+
 
 // Booking views
 Route::get('/booking/{id}', function ($id) {

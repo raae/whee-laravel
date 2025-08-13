@@ -7,16 +7,6 @@ use Illuminate\Support\Facades\Http;
 
 
 
-// I didn't get around to passing this on to web.php
-class GetNextBooking
-{
-    public static function all(): array
-    {
-        return ['time' => '26. august 2025', 'location' => 'Sandaker'];
-    }
-}
-
-
 class AirtableService
 {
     protected $baseId;
@@ -59,5 +49,9 @@ class AirtableService
 
             return $response['records'][0] ?? null;
         });
+    }
+    public function getNextBooking ()
+    {
+        return ['time' => '26. august 2025', 'location' => 'Sandaker'];        
     }
 }
