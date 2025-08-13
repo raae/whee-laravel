@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AirtableService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -16,14 +17,28 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        $user = $request->user();
-        $userBikes = [];
+        $airtableUserId = $request->user()->airtable_id;
+        $airtableUser = $this->airtableService->getUser($airtableUserId);
 
-        // Get user's bikes from Airtable if user has an Airtable ID
-        if ($user && $user->airtable_id) {
-            $userBikes = $this->airtableService->getUserBikes($user->airtable_id);
+
+        $profile = [];
+        $subscriptions = [];
+
+        if ($airtableUser) {
+            $profile = [
+                "name" => $airtableUser["fields"]["name"][0],
+                "email" => $airtableUser["fields"]["email"][0],
+                "phone" => $airtableUser["fields"]["phone"][0],
+            ];
+
+           $subscriptions[0] = [
+            "name" => $airtableUser["fields"]["bikeSubscriptionName"][0],
+            "startDate" => $airtableUser["fields"]["latestHandoutDate"],
+            "price" => $airtableUser["fields"]["bikeSubscriptionPrice"][0],
+            "bikeName" => $airtableUser["fields"]["bikeTypeShort"][0],
+           ];
         }
 
-        return view('dashboard', compact('userBikes'));
+        return view('dashboard', compact('subscriptions', 'profile'));
     }
 }

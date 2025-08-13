@@ -7,31 +7,52 @@ use Illuminate\Support\Facades\Http;
 
 class AirtableService
 {
-    protected $baseId;
+    private $baseUrl = 'https://api.airtable.com/v0';
+    private $baseId;
+    private $headers;
 
-    protected $apiKey;
 
     public function __construct()
     {
         $this->baseId = config('services.airtable.base_id');
-        $this->apiKey = config('services.airtable.api_key');
+        $this->headers = [
+            'Authorization' => 'Bearer '.config('services.airtable.api_key'),
+        ];
     }
 
-    protected function makeRequest($tableName = '', $params = [])
+    protected function makeRequest($tableName = '', $query = [])
     {
-        $url = "https://api.airtable.com/v0/{$this->baseId}/{$tableName}/";
+        $url = "{$this->baseUrl}/{$this->baseId}/{$tableName}/";
+        if (isset($query['recordId'])) {
+            $url = "{$this->baseUrl}/{$this->baseId}/{$tableName}/{$query['recordId']}";
+            unset($query['recordId']);
+        }
+        $response = Http::withHeaders($this->headers)->get($url, $query);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->apiKey,
-        ])->get($url, $params);
+        // dd($query);
+        // dd($url);
 
         dd($response->json());
+
 
         if ($response->successful()) {
             return $response->json();
         }
 
         throw new \Exception('Airtable API request failed: '.$response->body());
+    }
+
+    public function getUser($airtableUserId)
+    {
+        $cacheKey = 'airtable_user_'.md5($airtableUserId);
+
+        return Cache::remember($cacheKey, 300, function () use ($airtableUserId) {
+            $response = $this->makeRequest('customers', [
+                'recordId' => $airtableUserId,
+            ]);
+
+            return $response['records'][0] ?? null;
+        });
     }
 
     public function getUserByPhone($phone)
@@ -48,16 +69,27 @@ class AirtableService
         });
     }
 
-    public function getUserBikes($customerId)
+    public function getBikes($bikeIds)
     {
-        $cacheKey = 'airtable_user_bikes_'.md5($customerId);
+        $cacheKey = 'airtable_bikes_'.md5(implode(',', $bikeIds));
 
-        return Cache::remember($cacheKey, 300, function () use ($customerId) {
+        return Cache::remember($cacheKey, 300, function () use ($bikeIds) {
             $response = $this->makeRequest('bikes', [
-                'filterByFormula' => "FIND('{$customerId}', ARRAYJOIN({customer}, ','))",
+                'filterByFormula' => "({id} IN ('".implode("','", $bikeIds)."'))",
             ]);
-
-            return $response['records'] ?? [];
         });
     }
+
+    // public function getUserBikes($customerId)
+    // {
+    //     $cacheKey = 'airtable_user_bikes_'.md5($customerId);
+
+    //     return Cache::remember($cacheKey, 300, function () use ($customerId) {
+    //         $response = $this->makeRequest('bikes', [
+    //             'filterByFormula' => "({customerId} = '{$customerId}')",
+    //         ]);
+
+    //         return $response['records'] ?? [];
+    //     });
+    // }
 }

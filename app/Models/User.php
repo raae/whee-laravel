@@ -73,6 +73,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get formatted airtable created date
+     */
+    public function getFormattedAirtableCreatedAtAttribute(): string
+    {
+        return $this->airtable_created_at?->isoFormat('DD. MMMM YYYY') ?? '';
+    }
+
+    /**
      * Find user locally or fetch from Airtable and create locally
      * This method prioritizes local database but falls back to Airtable if needed
      */

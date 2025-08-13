@@ -28,53 +28,26 @@
             </h1>
         </div>
 
-        @if(count($userBikes) > 0) @foreach($userBikes as $bike)
+        @if(count($subscriptions) > 0) @foreach($subscriptions as $subscription)
         <!-- Bike Subscription Card -->
         <div class="bg-gray-50 border-2 border-gray-200 rounded-lg p-6 mb-8">
             <div class="space-y-4">
                 <!-- Bike Name -->
                 <h2 class="text-2xl font-bold text-gray-900">
-                    {{ $bike["fields"]["name"] ?? "Ukjent sykkel" }}
+                    {{ $subscription["bikeName"] ?? "Ukjent sykkel" }}
                 </h2>
-
-                <!-- Total Price -->
-                <div class="text-lg text-gray-700">
-                    <span class="font-semibold">Totalpris:</span>
-                    {{
-                        number_format(
-                            $bike["fields"]["price"] ?? 0,
-                            0,
-                            ",",
-                            " "
-                        )
-                    }}
-                    kr per mnd
-                </div>
 
                 <!-- Start Date -->
                 <div class="text-gray-700">
                     Du har hatt Wheel-sykkel siden
-                    @if(isset($bike['fields']['startDate']))
-                    {{ \Carbon\Carbon::parse($bike['fields']['startDate'])->locale('no')->isoFormat('DD. MMMM YYYY') }}
-                    @else
-                    {{ auth()->user()->airtable_created_at->locale('no')->isoFormat('DD. MMMM YYYY') }}
-                    @endif
+                    {{ $subscription["startDate"] ?? "Ukjent dato" }}
                 </div>
 
                 <!-- Notice Period -->
                 <div class="text-gray-700">
-                    {{ $bike["fields"]["noticePeriod"] ?? "3" }} mnd
-                    oppsigelsestid
-                </div>
-
-                <!-- Change Link -->
-                <div class="pt-2">
-                    <a
-                        href="#"
-                        class="text-orange-600 hover:text-orange-700 font-medium underline"
-                    >
-                        Endre
-                    </a>
+                    {{
+                        $subscription["noticePeriod"] ?? "Ukjent oppsigelsestid"
+                    }}
                 </div>
             </div>
         </div>
@@ -145,7 +118,7 @@
                     >
                     <span
                         class="text-sm font-bold text-gray-900"
-                        >{{ auth()->user()->airtable_created_at->format('M j, Y') }}</span
+                        >{{ auth()->user()->formatted_airtable_created_at }}</span
                     >
                 </div>
             </div>
