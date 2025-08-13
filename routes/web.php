@@ -1,6 +1,5 @@
 <?php
 
-// Can I use CallingAllPapers in here?
 use App\Services\CallingAllPapers;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +12,7 @@ Route::get('/', function () {
 
 Route::get('/book', function () {
     
-    $bookings = AirtableService::class->getNextBooking();
+    $bookings = AirtableService::getNextBooking();
 
     return view('bokn', ['booking' => $bookings]);
 });

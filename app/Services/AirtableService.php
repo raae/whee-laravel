@@ -50,7 +50,7 @@ class AirtableService
             return $response['records'][0] ?? null;
         });
     }
-    public function getNextBooking ()
+    public static function getNextBooking ()
     {
         return ['time' => '26. august 2025', 'location' => 'Sandaker'];        
     }
