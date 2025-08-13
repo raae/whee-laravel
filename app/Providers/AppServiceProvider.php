@@ -20,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set Carbon locale to match application locale
+        \Carbon\Carbon::setLocale(config('app.locale'));
+
         $this->validateOtpNotificationConfig();
     }
 
