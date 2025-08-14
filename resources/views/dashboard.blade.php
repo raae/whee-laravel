@@ -46,12 +46,7 @@
                         >{{ auth()->user()->name ?? 'N/A' }}</span
                     >
                 </div>
-                <div>
-                    <p>Neste faste service</p>
-                    <h1>Whee! Sommerservice ☀️</h1>
-                    <p>Time: {{ $booking['time'] }} på {{ $booking['location'] }}</p>
-                    <a href="/book">Hvis du vil Endre tid eller Kansellere servicen gå hit</a>
-                </div>    
+
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-900"
                         >Telefonnummer:</span
@@ -95,6 +90,42 @@
                 </div>
             </div>
         </div>
+        <!-- Service time and place info -->
+        <div>
+            <h3
+                    class="text-sm font-bold mb-4 text-gray-900 uppercase tracking-wide"
+                >Neste service
+            </h3>
+                    
+                    
+                    
+                    <div class="space-y-2">
+                <div
+                    class="flex items-center gap-3 p-4 rounded-lg bg-orange-50 border-2 border-gray-200"
+                >
+                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div class="flex-1">
+                        <div class="text-sm font-medium text-gray-900">
+                            {{ $booking['time'] }}
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            på {{ $booking['location'] }}
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    class="p-4 text-left border-2 border-gray-200 rounded-lg hover:border-orange-400 transition-colors"
+                >
+                    <div class="text-sm font-bold mb-1 text-gray-900">
+                    Hvis du vil 
+                    </div>
+                    <a href="/book" class="text-sm text-gray-600">
+                        Endre tid eller Kansellere servicen
+                    </a>
+                </button>
+            </div>
+        </div>    
 
         <!-- Quick Actions -->
         <div class="mb-6">
