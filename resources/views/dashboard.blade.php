@@ -46,6 +46,12 @@
                         >{{ auth()->user()->name ?? 'N/A' }}</span
                     >
                 </div>
+                <div>
+                    <p>Neste faste service</p>
+                    <h1>Whee! Sommerservice ☀️</h1>
+                    <p>Time: {{ $booking['time'] }} på {{ $booking['location'] }}</p>
+                    <a href="/book">Hvis du vil Endre tid eller Kansellere servicen gå hit</a>
+                </div>    
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-900"
                         >Telefonnummer:</span
