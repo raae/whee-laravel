@@ -34,11 +34,21 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth
 // Protected routes
 Route::middleware('auth')->group(function () {
     Route::get('/min-side', function () {
+
         $booking = ['time' => '26-august-2025', 'location' => 'Sandaker'];
+
         return view('dashboard', ['booking' => $booking]);
     })->name('dashboard');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/book', function () {
+        
+        $bookings = AirtableService::getNextBooking();
+
+        return view('bokn', ['booking' => $bookings]);
+    });
+});
 //  Route::get('/bokn/{time}', function ($time) {
     
 //     $bookings = [
