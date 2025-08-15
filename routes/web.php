@@ -49,30 +49,3 @@ Route::middleware('auth')->group(function () {
         return view('bokn', ['booking' => $bookings]);
     });
 });
-//  Route::get('/bokn/{time}', function ($time) {
-    
-//     $bookings = [
-//         ['time' => '26-august-2025', 'location' => 'Sandaker'],
-//         ['time' => '27-august-2025', 'location' => 'Sandaker'],
-//         ['time' => '28-august-2025', 'location' => 'Sandaker'],
-//     ];
-
-//     $booking = collect($bookings)->first(fn ($booking) => $booking['time'] = $time);
-    
-//     return view('booking', ['booking' => $booking]);
-//  });
-
-
-// Booking views
-// Route::get('/booking/{id}', function ($id) {
-    
-//     $bookings = [
-//         ['id' => 1, 'time' => '26. august 2025', 'location' => 'Sandaker'],
-//         ['id' => 2, 'time' => '27. august 2025', 'location' => 'Sandaker'],
-//         ['id' => 3, 'time' => '28. august 2025', 'location' => 'Sandaker'],
-//     ];
-
-//     $booking = collect($bookings)->first(fn ($booking) => $booking['id'] = $id);
-    
-//     return view('booking', ['booking' => $booking]);
-// });
