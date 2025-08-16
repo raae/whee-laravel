@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
+
+
 class AirtableService
 {
     protected $baseId;
@@ -47,5 +49,9 @@ class AirtableService
 
             return $response['records'][0] ?? null;
         });
+    }
+    public static function getNextBooking ()
+    {
+        return ['time' => '26. august 2025', 'location' => 'Sandaker'];        
     }
 }

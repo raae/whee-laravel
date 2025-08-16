@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Services\AirtableService;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,12 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth
 // Protected routes
 Route::middleware('auth')->group(function () {
     Route::get('/min-side', function () {
-        return view('dashboard');
+        $booking = AirtableService::getNextBooking();
+        return view('dashboard', ['booking' => $booking]);
     })->name('dashboard');
+
+    Route::get('/booking', function () {
+        $booking = AirtableService::getNextBooking();
+        return view('booking', ['booking' => $booking]);
+    })->name('booking');
 });

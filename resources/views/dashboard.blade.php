@@ -46,6 +46,7 @@
                         >{{ auth()->user()->name ?? 'N/A' }}</span
                     >
                 </div>
+
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-900"
                         >Telefonnummer:</span
@@ -86,6 +87,36 @@
                         class="text-sm font-bold text-gray-900"
                         >{{ auth()->user()->airtable_created_at->format('M j, Y') }}</span
                     >
+                </div>
+            </div>
+        </div>
+        <!-- Service time and place info -->
+        <div class="mb-6">
+            <h3
+                class="text-sm font-bold mb-4 text-gray-900 uppercase tracking-wide"
+            >
+                Neste service
+            </h3>
+
+            <div class="space-y-2">
+                <div
+                    class="flex items-center gap-3 p-4 rounded-lg bg-orange-50 border-2 border-gray-200"
+                >
+                    <div class="flex-1">
+                        <div class="text-sm font-medium text-gray-900">
+                            {{ $booking["time"] }}
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            på {{ $booking["location"] }}
+                        </div>
+                        <a href="/booking" class="text-sm text-gray-600">
+                            Endre tid
+                        </a>
+                        &nbsp;|&nbsp;
+                        <a href="/booking" class="text-sm text-gray-600">
+                            Kanseller
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
